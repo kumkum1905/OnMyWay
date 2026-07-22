@@ -1,0 +1,192 @@
+/*==============================
+        CITY PAGE
+===============================*/
+
+body {
+    background: #0a0a0a;
+}
+
+.city-hero {
+    position: relative;
+    width: 100%;
+    height: 75vh;
+    overflow: hidden;
+}
+
+.city-hero img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,.15) 0%, rgba(0,0,0,.35) 55%, rgba(0,0,0,.85) 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    padding-bottom: 60px;
+    text-align: center;
+}
+
+.hero-overlay h1 {
+    color: white;
+    font-size: 72px;
+    font-weight: 800;
+    text-shadow: 0 5px 20px rgba(0,0,0,.6);
+    margin-bottom: 10px;
+}
+
+.hero-overlay p {
+    color: #e5c9ff;
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: 1px;
+}
+
+/*==============================
+      DESCRIPTION
+===============================*/
+
+.description-section {
+    width: 85%;
+    max-width: 900px;
+    margin: 80px auto;
+    text-align: center;
+}
+
+.description-section h2 {
+    font-size: 42px;
+    color: #c084fc;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+.description-section p {
+    font-size: 19px;
+    color: #ddd;
+    line-height: 1.9;
+}
+
+/*==============================
+         SECTION
+===============================*/
+
+.section {
+    width: 90%;
+    max-width: 1200px;
+    margin: 70px auto;
+}
+
+.section h2 {
+    font-size: 38px;
+    color: #c084fc;
+    text-align: center;
+    margin-bottom: 40px;
+    font-weight: 700;
+}
+
+/*==============================
+         CARDS
+===============================*/
+
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 22px;
+}
+
+.place-card,
+.food-card {
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.15);
+    backdrop-filter: blur(12px);
+    padding: 24px;
+    border-radius: 18px;
+    color: white;
+    font-size: 18px;
+    text-align: center;
+    transition: .3s ease;
+}
+
+.place-card:hover,
+.food-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(192,132,252,.5);
+    box-shadow: 0 15px 30px rgba(168,85,247,.25);
+}
+
+/*==============================
+       TRAVEL INFO
+===============================*/
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 28px;
+}
+
+.info-card {
+    background: #fff;
+    padding: 30px;
+    border-radius: 18px;
+    text-align: center;
+    transition: .3s ease;
+}
+
+.info-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0,0,0,.35);
+}
+
+.info-card h3 {
+    margin-bottom: 12px;
+    color: #7e22ce;
+    font-size: 18px;
+}
+
+.info-card p {
+    font-size: 22px;
+    font-weight: 700;
+    color: #222;
+}
+
+/*==============================
+       BACK BUTTON
+===============================*/
+
+.back-home {
+    display: flex;
+    justify-content: center;
+    margin: 70px 0 100px;
+}
+
+.home-btn {
+    text-decoration: none;
+    background: #a855f7;
+    color: white;
+    padding: 18px 45px;
+    border-radius: 40px;
+    font-size: 18px;
+    font-weight: 600;
+    transition: .3s ease;
+}
+
+.home-btn:hover {
+    background: #9333ea;
+    transform: translateY(-5px);
+}
+
+/*==============================
+        RESPONSIVE
+===============================*/
+
+@media (max-width: 768px) {
+    .hero-overlay h1 { font-size: 46px; }
+    .hero-overlay p { font-size: 16px; }
+    .description-section h2 { font-size: 30px; }
+    .description-section p { font-size: 16px; }
+    .section h2 { font-size: 28px; }
+}
