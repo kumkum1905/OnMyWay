@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>OnMyWay</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+
+    <nav>
+
+        <div class="logo">OnMyWay</div>
+
+        <ul>
+
+            <li><a href="#home">Home</a></li>
+
+            <li><a href="#about">About Us</a></li>
+
+            <li><a href="#places">Places</a></li>
+
+        </ul>
+
+    </nav>
+
+    <!-- ================= HOME ================= -->
+
+    <section id="home" class="hero">
+
+        <img src="{{ url_for('static', filename='assets/homeBG.png') }}" class="bg">
+
+        <h1 class="title">OnMyWay</h1>
+
+        <img src="{{ url_for('static', filename='assets/mountains.png') }}" class="mountains">
+
+    </section>
+
+    <!-- ================= ABOUT ================= -->
+
+    <section id="about">
+
+        <div class="overlay"></div>
+
+        <div class="about-content">
+
+            <h1>About Us</h1>
+
+            <p>
+
+                At OnMyWay, we believe every journey creates unforgettable
+                memories. Our mission is to help travelers discover breathtaking
+                destinations, explore famous attractions, find comfortable hotels,
+                enjoy authentic local cuisine, and travel with confidence.
+                Whether you're planning a weekend getaway or a long vacation,
+                OnMyWay is your trusted travel companion for discovering the
+                beauty of India.
+
+            </p>
+
+        </div>
+
+    </section>
+
+    <!-- ================= PLACES ================= -->
+
+    <section id="places">
+
+        <!-- Background Video -->
+
+        <video class="bg-video" autoplay muted loop playsinline>
+
+            <source src="{{ url_for('static', filename='assets/places.mp4') }}" type="video/mp4">
+
+        </video>
+
+        <!-- Dark Overlay -->
+
+        <div class="place-overlay"></div>
+
+        <!-- Glass Card -->
+
+        <div class="glass-card">
+
+            <h1>Where Will Your Next Journey Begin?</h1>
+
+            <p>
+
+                Enter the destination you want to visit and discover famous
+                attractions, local food, hotels, and vehicle rentals.
+
+            </p>
+
+            <form id="placeForm" >
+            
+                <input
+                    type="text"
+                    id="cityInput"
+                    name="city"
+                    placeholder="Type a city name..."
+                    required
+                >
+
+                <button type="submit">
+
+                    Explore
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </section>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+
+</body>
+
+</html>

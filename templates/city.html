@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OnMyWay | Destination</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='city.css') }}">
+</head>
+
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+    <nav>
+        <div class="logo">OnMyWay</div>
+        <ul>
+            <li><a href="/">Home</a></li>
+        </ul>
+    </nav>
+
+    <!-- ================= HERO ================= -->
+    <section class="city-hero">
+        <img id="heroImage" alt="Destination Image">
+        <div class="hero-overlay">
+            <h1 id="cityName">Loading...</h1>
+            <p id="stateName"></p>
+        </div>
+    </section>
+
+    <!-- ================= DESCRIPTION ================= -->
+    <section class="description-section">
+        <h2>About This Destination</h2>
+        <p id="description">Loading...</p>
+    </section>
+
+    <!-- ================= PLACES ================= -->
+    <section class="section">
+        <h2>Top Attractions</h2>
+        <div id="placesContainer" class="card-container"></div>
+    </section>
+
+    <!-- ================= FOODS ================= -->
+    <section class="section">
+        <h2>Popular Foods</h2>
+        <div id="foodContainer" class="card-container"></div>
+    </section>
+
+    <!-- ================= TRAVEL INFO ================= -->
+    <section class="section">
+        <h2>Travel Information</h2>
+        <div class="info-grid">
+            <div class="info-card">
+                <h3>🏨 Hotel Price</h3>
+                <p id="hotelPrice"></p>
+            </div>
+            <div class="info-card">
+                <h3>🏍 Bike Rent</h3>
+                <p id="bikeRent"></p>
+            </div>
+            <div class="info-card">
+                <h3>🛵 Scooter Rent</h3>
+                <p id="scooterRent"></p>
+            </div>
+            <div class="info-card">
+                <h3>🚗 Car Rent</h3>
+                <p id="carRent"></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= BACK BUTTON ================= -->
+    <section class="back-home">
+        <a href="/" class="home-btn">← Back to Home</a>
+    </section>
+
+    <script src="{{ url_for('static', filename='city.js') }}"></script>
+</body>
+</html>
