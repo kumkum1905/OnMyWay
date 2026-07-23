@@ -1,192 +1,1126 @@
-/*==============================
-        CITY PAGE
-===============================*/
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Playfair+Display:wght@600;700;800&display=swap');
 
-body {
-    background: #0a0a0a;
+/*=====================================================
+    DESIGN TOKENS
+    Why: a single source of truth for color, spacing,
+    radius and motion keeps every section visually
+    related instead of "close enough" copy-pasted values.
+=====================================================*/
+:root{
+    /* Brand */
+    --primary: #ff4fa3;
+    --primary-dark: #e6398d;
+    --secondary: #8b5cf6;
+    --secondary-dark: #6d28d9;
+    --accent: #ff8ad4;
+    --accent-2: #ff9dd6;
+    --gold: #ffc857;
+
+    --gradient: linear-gradient(135deg, #ff4fa3, #d946ef, #8b5cf6);
+    --gradient-soft: linear-gradient(135deg, rgba(255,79,163,.16), rgba(139,92,246,.16));
+
+    /* Surface */
+    --bg: #0f0618;
+    --bg-light: #1b0d2c;
+    --card: rgba(255,255,255,.08);
+    --card-solid: #160a26;
+    --border: rgba(255,255,255,.14);
+
+    /* Text */
+    --text: #ffffff;
+    --text-light: #e9d8ff;
+    --text-muted: #b9a9d6;
+
+    /* Elevation */
+    --shadow: 0 10px 30px rgba(0,0,0,.35);
+    --shadow-hover: 0 20px 50px rgba(255,79,163,.3), 0 0 0 1px rgba(255,79,163,.35);
+
+    /* 8px spacing scale — why: consistent rhythm reads as
+       "designed" rather than eyeballed; every gap/padding
+       below is a multiple of 8. */
+    --space-1: 8px;
+    --space-2: 16px;
+    --space-3: 24px;
+    --space-4: 32px;
+    --space-5: 48px;
+    --space-6: 64px;
+    --space-7: 96px;
+
+    /* Radius scale — one ramp instead of ad-hoc 18/20/28px per section */
+    --radius-sm: 12px;
+    --radius-md: 18px;
+    --radius-lg: 24px;
+    --radius-pill: 50px;
+
+    /* Motion — this cubic-bezier ("ease-out-expo") is the curve
+       Apple/Airbnb/Stripe use for premium-feeling hover states:
+       fast start, long soft settle. Generic ease/ease-in-out
+       feels mechanical by comparison. */
+    --ease-out: cubic-bezier(.16,1,.3,1);
+    --transition: .4s var(--ease-out);
+
+    --max-width: 1200px;
 }
 
-.city-hero {
-    position: relative;
-    width: 100%;
-    height: 75vh;
-    overflow: hidden;
+/*=====================================================
+    RESET / BASE
+=====================================================*/
+*{ margin:0; padding:0; box-sizing:border-box; }
+
+html{ scroll-behavior:smooth; }
+
+body{
+    font-family:'Poppins', sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.6;
+    overflow-x:hidden;
+    position:relative;
 }
 
-.city-hero img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+img{ max-width:100%; display:block; }
+a{ color:inherit; text-decoration:none; }
+ul{ list-style:none; }
+
+/* Visible, on-brand keyboard focus — required for a real
+   "premium" bar (Apple/Stripe never ship invisible focus states) */
+a:focus-visible,
+button:focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:4px;
+    border-radius:4px;
 }
 
-.hero-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(0,0,0,.15) 0%, rgba(0,0,0,.35) 55%, rgba(0,0,0,.85) 100%);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    align-items: center;
-    padding-bottom: 60px;
-    text-align: center;
+::selection{ background:var(--primary); color:#fff; }
+
+::-webkit-scrollbar{ width:10px; }
+::-webkit-scrollbar-track{ background:var(--bg); }
+::-webkit-scrollbar-thumb{
+    background:linear-gradient(var(--primary), var(--secondary));
+    border-radius:20px;
 }
 
-.hero-overlay h1 {
-    color: white;
-    font-size: 72px;
-    font-weight: 800;
-    text-shadow: 0 5px 20px rgba(0,0,0,.6);
-    margin-bottom: 10px;
+/*=====================================================
+    AMBIENT BACKGROUND
+    Why: two slow, blurred color blobs fixed to the viewport
+    give the whole page a sense of depth and life without
+    any JS — the "soft glow / dark theme" the brief asks for,
+    felt rather than noticed.
+=====================================================*/
+body::before,
+body::after{
+    content:"";
+    position:fixed;
+    width:640px;
+    height:640px;
+    border-radius:50%;
+    filter:blur(160px);
+    z-index:-1;
+    pointer-events:none;
+}
+body::before{
+    background:rgba(255,79,163,.14);
+    top:-120px;
+    left:-160px;
+    animation:blobDrift 22s ease-in-out infinite alternate;
+}
+body::after{
+    background:rgba(139,92,246,.16);
+    bottom:-160px;
+    right:-160px;
+    animation:blobDrift 26s ease-in-out infinite alternate-reverse;
+}
+@keyframes blobDrift{
+    from{ transform:translate(0,0) scale(1); }
+    to{ transform:translate(60px,40px) scale(1.15); }
 }
 
-.hero-overlay p {
-    color: #e5c9ff;
-    font-size: 20px;
-    font-weight: 500;
-    letter-spacing: 1px;
+/*=====================================================
+    SHARED: SECTION TITLES / EYEBROWS / GRIDS
+    Why: these were duplicated near-identically in six
+    different sections in the original file. One rule here
+    replaces all of them and guarantees they stay in sync.
+=====================================================*/
+.section-eyebrow{
+    display:inline-block;
+    font-size:.85rem;
+    font-weight:600;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--accent-2);
+    margin-bottom:var(--space-2);
 }
 
-/*==============================
-      DESCRIPTION
-===============================*/
-
-.description-section {
-    width: 85%;
-    max-width: 900px;
-    margin: 80px auto;
-    text-align: center;
+.section-title{
+    position:relative;
+    z-index:1;
+    text-align:center;
+    max-width:640px;
+    margin:0 auto var(--space-6);
 }
 
-.description-section h2 {
-    font-size: 42px;
-    color: #c084fc;
-    margin-bottom: 25px;
-    font-weight: 700;
+.section-title h2,
+.light-heading{
+    font-size:clamp(2rem, 4vw, 2.75rem);
+    font-weight:800;
+    line-height:1.15;
+    margin-bottom:var(--space-2);
+    background:var(--gradient);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
 }
 
-.description-section p {
-    font-size: 19px;
-    color: #ddd;
-    line-height: 1.9;
+.section-title p,
+.light-sub{
+    font-size:1.05rem;
+    color:var(--text-light);
+    max-width:640px;
+    margin:0 auto;
 }
 
-/*==============================
-         SECTION
-===============================*/
-
-.section {
-    width: 90%;
-    max-width: 1200px;
-    margin: 70px auto;
+.cards-grid{
+    position:relative;
+    z-index:1;
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));
+    gap:var(--space-4);
+    margin-top:var(--space-4);
 }
 
-.section h2 {
-    font-size: 38px;
-    color: #c084fc;
-    text-align: center;
-    margin-bottom: 40px;
-    font-weight: 700;
-}
-
-/*==============================
-         CARDS
-===============================*/
-
-.card-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 22px;
-}
-
+/*=====================================================
+    SHARED: GLASS CARD FAMILY
+    Why: quick-card / season-card / place-card / food-card /
+    travel-card / checklist-card / review-card were seven
+    near-identical blocks with tiny inconsistencies (some had
+    scale(1.02), others scale(1.03); some had a shine sweep,
+    others didn't). Consolidating them into one rule set means
+    every card in the site now behaves identically, which is
+    what makes a design feel "systemized" rather than assembled
+    piece by piece.
+=====================================================*/
+.quick-card,
+.season-card,
 .place-card,
-.food-card {
-    background: rgba(255,255,255,.06);
-    border: 1px solid rgba(255,255,255,.15);
-    backdrop-filter: blur(12px);
-    padding: 24px;
-    border-radius: 18px;
-    color: white;
-    font-size: 18px;
-    text-align: center;
-    transition: .3s ease;
+.food-card,
+.travel-card,
+.checklist-card,
+.review-card{
+    position:relative;
+    isolation:isolate;
+    overflow:hidden;
+    border-radius:var(--radius-lg);
+    padding:var(--space-4) var(--space-3);
+    text-align:center;
+    color:var(--text);
+
+    /* Gradient border via double background (padding-box + border-box)
+       — a real gradient outline with no extra markup. */
+    background:
+        linear-gradient(var(--card-solid), var(--card-solid)) padding-box,
+        linear-gradient(135deg, rgba(255,255,255,.2), rgba(255,255,255,.04)) border-box;
+    border:1px solid transparent;
+
+    backdrop-filter:blur(16px);
+    -webkit-backdrop-filter:blur(16px);
+    box-shadow:var(--shadow);
+    transition:transform .5s var(--ease-out), box-shadow .5s var(--ease-out), background .6s var(--ease-out);
 }
 
+/* Shine sweep on hover — one diagonal highlight band across every card family */
+.quick-card::after,
+.season-card::after,
+.place-card::after,
+.food-card::after,
+.travel-card::after,
+.checklist-card::after,
+.review-card::after{
+    content:"";
+    position:absolute;
+    top:-150%;
+    left:-60%;
+    width:55%;
+    height:300%;
+    background:rgba(255,255,255,.12);
+    transform:rotate(25deg);
+    transition:left .8s var(--ease-out);
+    pointer-events:none;
+    z-index:-1;
+}
+
+.quick-card:hover,
+.season-card:hover,
 .place-card:hover,
-.food-card:hover {
-    transform: translateY(-6px);
-    border-color: rgba(192,132,252,.5);
-    box-shadow: 0 15px 30px rgba(168,85,247,.25);
+.food-card:hover,
+.travel-card:hover,
+.checklist-card:hover,
+.review-card:hover{
+    transform:translateY(-10px) scale(1.02);
+    box-shadow:var(--shadow-hover);
+    background:
+        linear-gradient(var(--card-solid), var(--card-solid)) padding-box,
+        linear-gradient(135deg, var(--primary), var(--secondary)) border-box;
 }
 
-/*==============================
-       TRAVEL INFO
-===============================*/
-
-.info-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 28px;
+.quick-card:hover::after,
+.season-card:hover::after,
+.place-card:hover::after,
+.food-card:hover::after,
+.travel-card:hover::after,
+.checklist-card:hover::after,
+.review-card:hover::after{
+    left:150%;
 }
 
-.info-card {
-    background: #fff;
-    padding: 30px;
-    border-radius: 18px;
-    text-align: center;
-    transition: .3s ease;
+/* Shared icon treatment across card types */
+.quick-icon,
+.season-icon,
+.place-pin,
+.food-icon,
+.travel-card > span,
+.checklist-card > span{
+    display:block;
+    font-size:1.8rem;
+    margin-bottom:var(--space-2);
+    color:var(--accent-2);
+    filter:drop-shadow(0 0 8px rgba(255,79,163,.4));
 }
 
-.info-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 30px rgba(0,0,0,.35);
+/*=====================================================
+    NAVBAR
+=====================================================*/
+nav{
+    position:fixed;
+    top:20px;
+    left:50%;
+    transform:translateX(-50%);
+    width:min(92%, 1200px);
+    padding:16px 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:var(--space-3);
+    background:rgba(255,255,255,.07);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border:1px solid var(--border);
+    border-radius:var(--radius-pill);
+    box-shadow:0 10px 35px rgba(0,0,0,.25), 0 0 25px rgba(255,79,163,.12);
+    z-index:1000;
+    transition:box-shadow .4s ease;
 }
 
-.info-card h3 {
-    margin-bottom: 12px;
-    color: #7e22ce;
-    font-size: 18px;
+nav:hover{
+    box-shadow:0 12px 40px rgba(0,0,0,.3), 0 0 35px rgba(139,92,246,.25);
 }
 
-.info-card p {
-    font-size: 22px;
-    font-weight: 700;
-    color: #222;
+.logo{
+    font-size:1.5rem;
+    font-weight:800;
+    letter-spacing:.5px;
+    background:var(--gradient);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    transition:transform .3s var(--ease-out);
+}
+.logo:hover{ transform:scale(1.06); }
+
+nav ul{
+    display:flex;
+    align-items:center;
+    gap:var(--space-4);
 }
 
-/*==============================
-       BACK BUTTON
-===============================*/
-
-.back-home {
-    display: flex;
-    justify-content: center;
-    margin: 70px 0 100px;
+nav ul li a{
+    position:relative;
+    display:inline-block;
+    font-size:.95rem;
+    font-weight:500;
+    padding:8px 0;
+    color:#fff;
+    transition:color .3s ease;
 }
 
-.home-btn {
-    text-decoration: none;
-    background: #a855f7;
-    color: white;
-    padding: 18px 45px;
-    border-radius: 40px;
-    font-size: 18px;
-    font-weight: 600;
-    transition: .3s ease;
+nav ul li a::after{
+    content:"";
+    position:absolute;
+    left:50%;
+    bottom:-4px;
+    width:0%;
+    height:2px;
+    border-radius:20px;
+    transform:translateX(-50%);
+    background:linear-gradient(to right, var(--primary), var(--secondary));
+    transition:width .35s var(--ease-out);
 }
 
-.home-btn:hover {
-    background: #9333ea;
-    transform: translateY(-5px);
+nav ul li a:hover{ color:var(--accent-2); }
+nav ul li a:hover::after{ width:100%; }
+
+/* Plan Your Trip — a real CTA, not another text link.
+   Why: in the original file this was styled identically
+   to "Home"/"Attractions", so the one action you most want
+   clicked had no visual priority. */
+nav ul li a.nav-cta{
+    padding:10px 22px;
+    border-radius:var(--radius-pill);
+    background:var(--gradient);
+    color:#fff;
+    font-weight:600;
+    box-shadow:0 8px 20px rgba(255,79,163,.35);
+    transition:transform .35s var(--ease-out), box-shadow .35s var(--ease-out);
+}
+nav ul li a.nav-cta::after{ content:none; }
+nav ul li a.nav-cta:hover{
+    color:#fff;
+    transform:translateY(-3px);
+    box-shadow:0 14px 30px rgba(255,79,163,.45);
 }
 
-/*==============================
-        RESPONSIVE
-===============================*/
+@media(max-width:768px){
+    nav{ width:95%; padding:14px 22px; }
+    .logo{ font-size:1.3rem; }
+    nav ul{ gap:16px; }
+    nav ul li a{ font-size:.85rem; }
+    nav ul li a.nav-cta{ padding:8px 16px; }
+}
 
-@media (max-width: 768px) {
-    .hero-overlay h1 { font-size: 46px; }
-    .hero-overlay p { font-size: 16px; }
-    .description-section h2 { font-size: 30px; }
-    .description-section p { font-size: 16px; }
-    .section h2 { font-size: 28px; }
+/*=====================================================
+    HERO
+=====================================================*/
+.city-hero{
+    position:relative;
+    width:100%;
+    height:100vh;
+    min-height:720px;
+    overflow:hidden;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    isolation:isolate;
+}
+
+.city-hero img{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center;
+    animation:heroZoom 18s ease-in-out infinite alternate;
+    z-index:-4;
+}
+@keyframes heroZoom{
+    0%{ transform:scale(1) translateX(0); }
+    100%{ transform:scale(1.12) translateX(-20px); }
+}
+
+.hero-scrim{
+    position:absolute;
+    inset:0;
+    z-index:-3;
+    background:linear-gradient(180deg, rgba(15,6,24,.5) 0%, rgba(15,6,24,.25) 45%, rgba(15,6,24,.97) 100%);
+}
+
+.city-hero::before{
+    content:"";
+    position:absolute;
+    width:520px;
+    height:520px;
+    border-radius:50%;
+    /* background:rgba(255,79,163,.22); */
+    filter:blur(140px);
+    left:50%;
+    top:22%;
+    transform:translateX(-50%);
+    animation:glowPulse 7s infinite alternate;
+    z-index:-2;
+}
+@keyframes glowPulse{
+    from{ transform:translateX(-50%) scale(.9); }
+    to{ transform:translateX(-50%) scale(1.2); }
+}
+
+.hero-overlay{
+    width:min(1200px, 90%);
+    margin:0 auto;
+    padding-bottom:160px;
+    position:relative;
+    z-index:10;
+}
+
+.breadcrumb,
+.hero-tag,
+.hero-state{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    border-radius:var(--radius-pill);
+    background:rgba(255,255,255,.08);
+    backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);
+    border:1px solid var(--border);
+    animation:fadeUp 1s var(--ease-out) both, floating 6s ease-in-out infinite;
+}
+
+.breadcrumb{
+    padding:10px 18px;
+    margin-bottom:var(--space-3);
+    color:#e9d5ff;
+    font-size:.9rem;
+    transition:transform .3s var(--ease-out), border-color .3s ease, color .3s ease;
+    animation-delay:0s, .4s; /* first anim (fadeUp) plays immediately, float starts slightly after */
+}
+.breadcrumb:hover{
+    transform:translateY(-3px);
+    border-color:var(--primary);
+    color:#fff;
+}
+
+.hero-tag{
+    padding:10px 20px;
+    margin-bottom:var(--space-4);
+    color:#ffd8f0;
+    letter-spacing:1px;
+    font-size:.85rem;
+    animation-delay:.15s, .6s;
+}
+
+.hero-state{
+    padding:12px 22px;
+    color:#fff;
+    font-size:1rem;
+    animation-delay:.3s, .8s;
+}
+
+@keyframes floating{
+    0%,100%{ transform:translateY(0); }
+    50%{ transform:translateY(-6px); }
+}
+@keyframes fadeUp{
+    from{ opacity:0; transform:translateY(40px); }
+    to{ opacity:1; transform:translateY(0); }
+}
+
+.city-hero h1{
+    font-size:clamp(4rem, 9vw, 7.5rem);
+    font-weight:800;
+    line-height:1;
+    letter-spacing:2px;
+    margin-bottom:var(--space-2);
+    background:linear-gradient(135deg, #ffffff, #ffd6ef, #ff4fa3);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    text-shadow:0 0 30px rgba(255,79,163,.25);
+    animation:titleReveal 1.2s var(--ease-out) both;
+}
+@keyframes titleReveal{
+    from{ opacity:0; transform:translateY(60px); }
+    to{ opacity:1; transform:translateY(0); }
+}
+
+/* Scroll cue — pure CSS, no extra markup: a mouse-shape outline
+   with a dot that travels and fades, the universal "keep scrolling"
+   signal used on most cinematic hero sections (Apple product pages,
+   Awwwards sites). */
+.city-hero::after{
+    content:"";
+    position:absolute;
+    bottom:150px;
+    left:50%;
+    transform:translateX(-50%);
+    width:26px;
+    height:42px;
+    border:2px solid rgba(255,255,255,.5);
+    border-radius:20px;
+    background:radial-gradient(circle, #fff 45%, transparent 48%) center 8px / 8px 8px no-repeat;
+    animation:scrollDot 1.8s ease-in-out infinite;
+    z-index:6;
+    opacity:.85;
+}
+@keyframes scrollDot{
+    0%{ background-position:center 8px; opacity:.85; }
+    50%{ background-position:center 24px; opacity:.25; }
+    100%{ background-position:center 8px; opacity:.85; }
+}
+
+/* Wave divider */
+.hero-edge{
+    position:absolute;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:120px;
+    background:var(--bg);
+    clip-path:polygon(0 45%, 12% 58%, 24% 46%, 36% 61%, 48% 42%, 60% 56%, 72% 44%, 84% 60%, 100% 45%, 100% 100%, 0 100%);
+}
+
+@media(max-width:900px){
+    .hero-overlay{ padding-bottom:130px; }
+    .city-hero h1{ font-size:4rem; }
+    .hero-state{ font-size:.95rem; }
+    .city-hero::after{ bottom:110px; }
+}
+@media(max-width:600px){
+    .city-hero{ min-height:620px; }
+    .hero-overlay{ padding-bottom:110px; }
+    .city-hero h1{ font-size:3rem; }
+    .breadcrumb, .hero-tag, .hero-state{ font-size:.8rem; }
+    .city-hero::after{ display:none; } /* not enough vertical room on small phones */
+}
+
+/*=====================================================
+    QUICK INFO
+=====================================================*/
+.quick-info{
+    width:100%;
+    display:flex;
+    justify-content:space-around;
+    align-items:stretch;
+    flex-wrap:wrap;
+    gap:var(--space-3);
+    padding:var(--space-5) 0 0;
+}
+
+.quick-card{
+    flex:1 1 220px;
+    padding:var(--space-4) var(--space-3);
+}
+
+.quick-card h2{
+    font-size:2.4rem;
+    font-weight:800;
+    margin-bottom:var(--space-1);
+    background:linear-gradient(135deg, #fff, #ffd6ef, var(--accent-2));
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    text-shadow:0 0 15px rgba(255,79,163,.25);
+}
+
+.quick-card p{
+    font-size:1rem;
+    font-weight:500;
+    color:var(--text-light);
+    letter-spacing:.5px;
+}
+
+@media(max-width:900px){
+    .quick-card{ flex:1 1 100%; }
+    .quick-card h2{ font-size:2rem; }
+}
+
+/*=====================================================
+    ABOUT
+    Why: originally the plainest section on the page —
+    a flat background between two very lively sections
+    breaks the visual rhythm. A faint ambient wash ties
+    it into the same glow language as the hero without
+    competing with the quick-info cards it now contains.
+=====================================================*/
+.about-city{
+    position:relative;
+    width:100%;
+    padding:var(--space-7) 8% var(--space-6);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    overflow:hidden;
+}
+
+.about-city::before{
+    content:"";
+    position:absolute;
+    width:600px;
+    height:600px;
+    border-radius:50%;
+    background:var(--gradient-soft);
+    filter:blur(120px);
+    top:-200px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:0;
+    pointer-events:none;
+}
+
+.about-content{
+    position:relative;
+    z-index:1;
+    max-width:900px;
+    text-align:center;
+    animation:fadeInUp .8s var(--ease-out) both;
+}
+
+.about-content h2{
+    font-size:2.6rem;
+    font-weight:800;
+    margin-bottom:var(--space-3);
+    line-height:1.2;
+}
+
+.gradient-text{
+    background:var(--gradient);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.about-content p{
+    font-size:1.1rem;
+    line-height:1.7;
+    color:var(--text-light);
+    max-width:700px;
+    margin:0 auto;
+}
+
+@keyframes fadeInUp{
+    from{ opacity:0; transform:translateY(30px); }
+    to{ opacity:1; transform:translateY(0); }
+}
+
+@media(max-width:768px){
+    .about-content h2{ font-size:2rem; }
+    .about-content p{ font-size:1rem; }
+}
+
+/*=====================================================
+    SEASON SECTION (Best Time to Visit)
+=====================================================*/
+.season-section{
+    position:relative;
+    width:100%;
+    padding:var(--space-7) 8%;
+    background:url("../static/assets/sec.jpg") no-repeat center;
+    background-size:cover;
+    color:#fff;
+}
+
+.season-section::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:rgba(20,10,40,.6);
+    backdrop-filter:blur(2px);
+    z-index:0;
+}
+
+.season-grid{
+    position:relative;
+    z-index:1;
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
+    gap:var(--space-4);
+}
+
+.season-card h3{
+    font-size:1.5rem;
+    font-weight:700;
+    margin-bottom:var(--space-1);
+}
+
+.season-months{
+    font-size:.95rem;
+    font-weight:600;
+    color:#ffd6ef;
+    margin-bottom:var(--space-2);
+}
+
+.season-card p{
+    font-size:.95rem;
+    line-height:1.6;
+    color:var(--text-light);
+}
+
+@media(max-width:768px){
+    .season-card h3{ font-size:1.3rem; }
+}
+
+/*=====================================================
+    ATTRACTIONS
+=====================================================*/
+#attractions{
+    width:100%;
+    padding-top:var(--space-4);
+    color:#fff;
+}
+
+.place-card h3,
+.food-card h3{
+    font-size:1.3rem;
+    font-weight:700;
+    margin-bottom:var(--space-2);
+}
+
+.place-tag,
+.food-tag{
+    display:inline-block;
+    padding:6px 14px;
+    border-radius:var(--radius-pill);
+    font-size:.8rem;
+    font-weight:600;
+    color:#fff;
+    background:linear-gradient(135deg, var(--primary), var(--secondary));
+    box-shadow:0 5px 15px rgba(255,79,163,.35);
+}
+
+.food-card{
+    background: rgba(0,0,0,.45);
+    backdrop-filter: blur(0px);
+    border: none;
+}
+
+.food-card:hover{  
+    background: rgba(0,0,0,.45);
+    backdrop-filter: blur(5px);
+    border: none;
+}
+
+/*=====================================================
+    TRAVEL INFORMATION
+=====================================================*/
+.travel-section{
+    width:100%;
+    padding:var(--space-7) 8%;
+    background:linear-gradient(135deg, rgba(20,10,40,.95), rgba(40,20,70,.95));
+    color:#fff;
+}
+
+.travel-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));
+    gap:var(--space-4);
+    margin-top:var(--space-4);
+}
+
+.travel-card h3{
+    font-size:1.1rem;
+    font-weight:600;
+    margin-bottom:var(--space-1);
+    color:var(--text-muted);
+}
+
+.travel-card p{
+    font-size:1.2rem;
+    font-weight:700;
+    color:#fff;
+}
+
+.travel-tips{
+    position:relative;
+    max-width:760px;
+    margin:var(--space-6) auto 0;
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius-md);
+    padding:var(--space-4);
+    backdrop-filter:blur(8px);
+    box-shadow:0 6px 20px rgba(0,0,0,.25);
+    margin-bottom: 40px;
+}
+
+.travel-tips h3{
+    font-size:1.35rem;
+    font-weight:700;
+    margin-bottom:var(--space-3);
+}
+
+.travel-tips li{
+    position:relative;
+    padding-left:28px;
+    margin-bottom:var(--space-2);
+    font-size:1rem;
+    color:var(--text-light);
+}
+
+.travel-tips li::before{
+    content:"✔";
+    position:absolute;
+    left:0;
+    color:var(--accent-2);
+    font-weight:bold;
+}
+
+@media(max-width:768px){
+    .travel-tips h3{ font-size:1.2rem; }
+}
+
+/*=====================================================
+    ESSENTIALS (Travel Checklist)
+    Fix: the original background path "./assets/travel.jpg"
+    is wrong relative to /templates/city.html and almost
+    certainly failed to load — corrected to match every
+    other section's "../static/assets/..." path.
+=====================================================*/
+.essentials-section{
+    position:relative;
+    width:100%;
+    padding:var(--space-7) 8%;
+    background:url("../static/assets/travel.jpg") no-repeat center;
+    background-size:cover;
+    color:#fff;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    border-radius: 30px;
+}
+
+.essentials-section::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:rgba(20,10,40,.65);
+    /* backdrop-filter:blur(2px); */
+    z-index:0;
+}
+
+.essentials-section .section-title{
+    position:relative;
+    z-index:1;
+}
+
+.checklist-grid{
+    position:relative;
+    z-index:1;
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));
+    gap:var(--space-3);
+    margin-top:var(--space-4);
+    width:100%;
+}
+
+.checklist-card{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:var(--space-3) var(--space-2);
+    background: rgba(0,0,0,.45);
+    backdrop-filter: blur(0px);
+}
+
+.checklist-card:hover{
+    background: rgba(0,0,0,.45);
+    backdrop-filter: blur(5px);
+    border: none;
+}
+
+.checklist-card p{
+    font-size:1rem;
+    font-weight:500;
+    color:var(--text-light);
+    line-height:1.5;
+}
+
+@media(max-width:768px){
+    .checklist-card p{ font-size:.95rem; }
+}
+
+/*=====================================================
+    REVIEWS
+=====================================================*/
+.reviews-section{
+    width:100%;
+    padding:var(--space-7) 8%;
+    background:linear-gradient(135deg, rgba(20,10,40,.95), rgba(40,20,70,.95));
+    color:#fff;
+}
+
+.reviews-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));
+    gap:var(--space-4);
+    margin-top:var(--space-4);
+}
+
+.review-card{
+    text-align:left;
+}
+
+.review-stars{
+    font-size:1.1rem;
+    font-weight:700;
+    margin-bottom:var(--space-2);
+    color:#ffd6ef;
+    text-shadow:0 0 12px rgba(255,79,163,.4);
+}
+
+.review-text{
+    font-size:1rem;
+    line-height:1.6;
+    color:var(--text-light);
+    margin-bottom:var(--space-3);
+    font-style:italic;
+}
+
+.review-author{
+    font-size:.9rem;
+    font-weight:600;
+    color:var(--accent-2);
+    text-align:right;
+}
+
+@media(max-width:768px){
+    .review-text{ font-size:.95rem; }
+}
+
+/*=====================================================
+    FAMOUS FOODS
+=====================================================*/
+.food{
+    position:relative;
+    width:100%;
+    padding:var(--space-7) 8%;
+    background:url("../static/assets/food.jpg") no-repeat center;
+    background-size:cover;
+    color:#fff;
+}
+
+.food::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:rgba(20,10,40,.6);
+    backdrop-filter:blur(2px);
+    z-index:0;
+}
+
+.food .section-title,
+.food .cards-grid{
+    position:relative;
+    z-index:1;
+}
+
+/*=====================================================
+    BACK / CTA SECTION
+=====================================================*/
+.back-section{
+    width:100%;
+    padding:var(--space-6) 8%;
+    background:linear-gradient(135deg, rgba(20,10,40,.95), rgba(40,20,70,.95));
+    color:#fff;
+    text-align:center;
+}
+
+.back-section h2{
+    font-size:2.6rem;
+    font-weight:800;
+    margin-bottom:var(--space-2);
+    background:var(--gradient);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+.back-sub{
+    font-size:1.1rem;
+    color:var(--text-light);
+    max-width:700px;
+    margin:0 auto var(--space-4);
+    line-height:1.6;
+}
+
+.back-actions{
+    display:flex;
+    justify-content:center;
+    gap:var(--space-3);
+    flex-wrap:wrap;
+}
+
+.home-btn,
+.popular-btn{
+    position:relative;
+    overflow:hidden;
+    display:inline-block;
+    padding:14px 30px;
+    border-radius:var(--radius-pill);
+    font-size:1rem;
+    font-weight:600;
+    transition:transform .4s var(--ease-out), box-shadow .4s var(--ease-out);
+    box-shadow:0 8px 20px rgba(0,0,0,.25);
+}
+
+/* Shine sweep for buttons too — the same premium micro-interaction
+   used on the cards, so the whole page feels like one system. */
+.home-btn::after,
+.popular-btn::after{
+    content:"";
+    position:absolute;
+    top:-100%;
+    left:-60%;
+    width:50%;
+    height:300%;
+    background:rgba(255,255,255,.35);
+    transform:rotate(25deg);
+    transition:left .7s var(--ease-out);
+}
+.home-btn:hover::after,
+.popular-btn:hover::after{ left:150%; }
+
+.home-btn{
+    background:var(--gradient);
+    color:#fff;
+}
+.home-btn:hover{
+    transform:translateY(-5px);
+    box-shadow:0 15px 35px rgba(255,79,163,.4);
+}
+
+.popular-btn{
+    background:rgba(255,255,255,.08);
+    border:1px solid var(--border);
+    color:var(--accent-2);
+    backdrop-filter:blur(8px);
+}
+.popular-btn:hover{
+    transform:translateY(-5px);
+    border-color:var(--primary);
+    box-shadow:0 15px 35px rgba(255,79,163,.35);
+}
+
+@media(max-width:768px){
+    .back-section h2{ font-size:2rem; }
+    .back-sub{ font-size:1rem; }
+    .home-btn, .popular-btn{ font-size:.95rem; padding:12px 22px; }
+}
+
+/*=====================================================
+    FOOTER
+=====================================================*/
+.city-footer{
+    text-align:center;
+    padding:var(--space-4) 8%;
+    border-top:1px solid var(--border);
+    color:var(--text-muted);
+    font-size:.85rem;
+}
+
+/*=====================================================
+    SCROLL REVEAL
+    Why: pairs with the tiny IntersectionObserver script
+    added at the bottom of city.html. Elements start slightly
+    lower and transparent, then settle into place as they
+    enter the viewport — the "scroll reveal" the brief asks
+    for, done without any HTML restructuring: the script
+    targets sections/cards that already exist.
+=====================================================*/
+.reveal-init{
+    opacity:0;
+    transform:translateY(36px);
+    transition:opacity .8s var(--ease-out), transform .8s var(--ease-out);
+}
+.reveal-in{
+    opacity:1;
+    transform:translateY(0);
+}
+
+/*=====================================================
+    ACCESSIBILITY: REDUCED MOTION
+    Why: the brief asks for a lot of motion — this respects
+    users who've told their OS they don't want it, without
+    losing any of the effect for everyone else.
+=====================================================*/
+@media (prefers-reduced-motion: reduce){
+    *, *::before, *::after{
+        animation-duration:.001ms !important;
+        animation-iteration-count:1 !important;
+        transition-duration:.001ms !important;
+        scroll-behavior:auto !important;
+    }
+    .reveal-init{ opacity:1; transform:none; }
 }

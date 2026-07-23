@@ -6,14 +6,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link rel="icon" type="image/png" href="../static/assets/logo.png">
     <title>OnMyWay</title>
+    <link rel="stylesheet" href="../static/template.css">
+    <link rel="stylesheet" href="../static/style.css">
+    <link rel="stylesheet" href="../static/form.css">
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 
 </head>
 
 <body>
 
+    <audio id="bgMusic" src="/static/assets/music.mp3"></audio>
     <!-- ================= NAVBAR ================= -->
 
     <nav>
@@ -29,100 +33,338 @@
             <li><a href="#places">Places</a></li>
 
         </ul>
+        <audio id="bgMusic" loop>
+
+            <source src="../static/assets/music.mp3" type="audio/mpeg">
+        
+        </audio>
+        
+        <div class="music-toggle" id="musicToggle">
+        
+            <span class="music-icon">🎵</span>
+        
+        </div>
 
     </nav>
 
     <!-- ================= HOME ================= -->
 
     <section id="home" class="hero">
-
-        <img src="{{ url_for('static', filename='assets/homeBG.png') }}" class="bg">
-
         <h1 class="title">OnMyWay</h1>
 
-        <img src="{{ url_for('static', filename='assets/mountains.png') }}" class="mountains">
+        <img src="../static/assets/mountains.png" class="mountains">
 
     </section>
 
     <!-- ================= ABOUT ================= -->
 
-    <section id="about">
+    <section class="about" id="about">
 
-        <div class="overlay"></div>
-
+        <div class="about-overlay"></div>
+    
         <div class="about-content">
-
-            <h1>About Us</h1>
-
+    
+            <span class="about-tag">
+                ✈ Explore India
+            </span>
+    
+            <h1>
+                Discover The Beauty <br>
+                <span>Beyond The Roads</span>
+            </h1>
+    
             <p>
-
-                At OnMyWay, we believe every journey creates unforgettable
-                memories. Our mission is to help travelers discover breathtaking
-                destinations, explore famous attractions, find comfortable hotels,
-                enjoy authentic local cuisine, and travel with confidence.
-                Whether you're planning a weekend getaway or a long vacation,
-                OnMyWay is your trusted travel companion for discovering the
-                beauty of India.
-
+                From the snowy Himalayas to the peaceful backwaters of Kerala,
+                OnMyWay helps you discover breathtaking destinations, hidden gems,
+                luxurious stays, authentic local food, and unforgettable adventures
+                across India.
             </p>
-
+    
+            <div class="about-features">
+    
+                <div class="feature">
+    
+                    <span>🏔</span>
+    
+                    <div>
+    
+                        <h3>500+</h3>
+                        <p>Destinations</p>
+    
+                    </div>
+    
+                </div>
+    
+                <div class="feature">
+    
+                    <span>🏨</span>
+    
+                    <div>
+    
+                        <h3>1000+</h3>
+                        <p>Hotels</p>
+    
+                    </div>
+    
+                </div>
+    
+                <div class="feature">
+    
+                    <span>🧭</span>
+    
+                    <div>
+    
+                        <h3>24/7</h3>
+                        <p>Travel Guide</p>
+    
+                    </div>
+    
+                </div>
+    
+            </div>
+    
+            <div class="about-btns">
+    
+                <a href="#places" class="btn">
+                    Explore Places
+                </a>
+    
+                <a href="#" class="btn-outline">
+                    Watch Journey
+                </a>
+    
+            </div>
+    
         </div>
-
+    
     </section>
 
     <!-- ================= PLACES ================= -->
 
     <section id="places">
 
-        <!-- Background Video -->
-
-        <video class="bg-video" autoplay muted loop playsinline>
-
-            <source src="{{ url_for('static', filename='assets/places.mp4') }}" type="video/mp4">
-
-        </video>
-
-        <!-- Dark Overlay -->
-
+        <!-- Background Overlay -->
         <div class="place-overlay"></div>
-
-        <!-- Glass Card -->
-
-        <div class="glass-card">
-
-            <h1>Where Will Your Next Journey Begin?</h1>
-
-            <p>
-
-                Enter the destination you want to visit and discover famous
-                attractions, local food, hotels, and vehicle rentals.
-
-            </p>
-
-            <form id="placeForm" >
-            
-                <input
-                    type="text"
-                    id="cityInput"
-                    name="city"
-                    placeholder="Type a city name..."
-                    required
-                >
-
-                <button type="submit">
-
-                    Explore
-
+    
+        <div class="admin-card">
+    
+            <h1>{{ msg }}</h1>
+    
+            <!-- ================= TABS ================= -->
+    
+            <div class="tabs">
+    
+                <button class="tab-btn active" data-tab="search">
+                    🔍 Search
                 </button>
-
-            </form>
-
+    
+                <button class="tab-btn" data-tab="add">
+                    ➕ Add Place
+                </button>
+    
+                <button class="tab-btn" data-tab="update">
+                    ✏ Update
+                </button>
+    
+            </div>
+    
+            <!-- ================= SEARCH ================= -->
+    
+            <div class="tab-content active" id="search">
+    
+                <form action="/search" method="GET">
+    
+                    <input
+                        type="text"
+                        name="city"
+                        placeholder="Enter City Name"
+                        required
+                    >
+    
+                    <button type="submit">
+                        Explore
+                    </button>
+    
+                </form>
+    
+            </div>
+    
+            <!-- ================= ADD ================= -->
+    
+            <div class="tab-content" id="add">
+    
+                <form id="addForm" action="/add" method="POST">
+    
+                    <input
+                        type="text"
+                        name="city"
+                        placeholder="City"
+                        required
+                    >
+    
+                    <input
+                        type="text"
+                        name="state"
+                        placeholder="State"
+                        required
+                    >
+    
+                    <input
+                        type="text"
+                        name="heroImage"
+                        placeholder="Hero Image URL"
+                        required
+                    >
+    
+                    <textarea
+                        name="description"
+                        placeholder="Description"
+                        required
+                    ></textarea>
+    
+                    <textarea
+                        name="places"
+                        placeholder="Places (comma separated)"
+                        required
+                    ></textarea>
+    
+                    <input
+                        type="text"
+                        name="averageHotelPrice"
+                        placeholder="Average Hotel Price"
+                        required
+                    >
+    
+                    <textarea
+                        name="popularFoods"
+                        placeholder="Popular Foods (comma separated)"
+                        required
+                    ></textarea>
+    
+                    <input
+                        type="text"
+                        name="bikeRent"
+                        placeholder="Bike Rent"
+                        required
+                    >
+    
+                    <input
+                        type="text"
+                        name="scooterRent"
+                        placeholder="Scooter Rent"
+                        required
+                    >
+    
+                    <input
+                        type="text"
+                        name="carRent"
+                        placeholder="Car Rent"
+                        required
+                    >
+    
+                    <button type="submit">
+                        Add Place
+                    </button>
+    
+                </form>
+    
+            </div>
+    
+            <!-- ================= UPDATE ================= -->
+    
+            <div class="tab-content" id="update">
+    
+                <form id="updateForm" action="/update" method="POST">
+    
+                    <input
+                        type="text"
+                        id="updateCity"
+                        name="city"
+                        placeholder="City (Required)"
+                        required
+                    >
+    
+                    <input
+                        type="text"
+                        name="state"
+                        placeholder="State"
+                    >
+    
+                    <input
+                        type="text"
+                        name="heroImage"
+                        placeholder="Hero Image URL"
+                    >
+    
+                    <textarea
+                        name="description"
+                        placeholder="Description"
+                    ></textarea>
+    
+                    <textarea
+                        name="places"
+                        placeholder="Places (comma separated)"
+                    ></textarea>
+    
+                    <input
+                        type="text"
+                        name="averageHotelPrice"
+                        placeholder="Average Hotel Price"
+                    >
+    
+                    <textarea
+                        name="popularFoods"
+                        placeholder="Popular Foods (comma separated)"
+                    ></textarea>
+    
+                    <input
+                        type="text"
+                        name="bikeRent"
+                        placeholder="Bike Rent"
+                    >
+    
+                    <input
+                        type="text"
+                        name="scooterRent"
+                        placeholder="Scooter Rent"
+                    >
+    
+                    <input
+                        type="text"
+                        name="carRent"
+                        placeholder="Car Rent"
+                    >
+    
+                    <div class="action-btns">
+    
+                        <button
+                            class="update-btn"
+                            type="submit"
+                        >
+                            Update
+                        </button>
+    
+                        <button
+    class="delete-btn"
+    type="submit"
+    formaction="/delete"
+    formmethod="POST">
+    Delete
+</button>
+    
+                    </div>
+    
+                </form>
+    
+            </div>
+    
         </div>
-
+    
     </section>
-
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
-
+    <script src="../static/script.js"></script>
+    <script src="../static/music.js"></script>
 </body>
 
 </html>
+
+  

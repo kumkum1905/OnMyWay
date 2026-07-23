@@ -2,78 +2,419 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OnMyWay | Destination</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='city.css') }}">
+
+    <title>OnMyWay | {{ place.city }}</title>
+    <link rel="stylesheet" href="../static/template.css">
+
+    <link rel="stylesheet" href="../static/city.css">
+
 </head>
 
 <body>
 
-    <!-- ================= NAVBAR ================= -->
-    <nav>
-        <div class="logo">OnMyWay</div>
+    <!--==========================
+            NAVBAR
+    ===========================-->
+
+    <nav class="city-nav">
+
+        <a href="/" class="logo">OnMyWay</a>
+
         <ul>
+
             <li><a href="/">Home</a></li>
+            <li><a href="#attractions">Attractions</a></li>
+            <li><a href="#travel">Getting Around</a></li>
+            <li><a href="#essentials-section" class="nav-cta">Plan Your Trip</a></li>
+
         </ul>
+
+        
+
     </nav>
 
-    <!-- ================= HERO ================= -->
+    <!--==========================
+            HERO
+    ===========================-->
+
     <section class="city-hero">
-        <img id="heroImage" alt="Destination Image">
+
+        <img
+            src="{{ url_for('static', filename=place.heroImage) }}"
+            alt="{{ place.city }}"
+        >
+
+        <div class="hero-scrim"></div>
+
         <div class="hero-overlay">
-            <h1 id="cityName">Loading...</h1>
-            <p id="stateName"></p>
+
+            <a href="/" class="breadcrumb hero-tag">← All Destinations</a>
+
+            <span class="hero-tag">✈ Incredible India</span>
+
+            <h1>{{ place.city }}</h1>
+
+            <p class="hero-state">📍 {{ place.state }}</p>
+
         </div>
+
+        <div class="hero-edge"></div>
+
     </section>
 
-    <!-- ================= DESCRIPTION ================= -->
-    <section class="description-section">
-        <h2>About This Destination</h2>
-        <p id="description">Loading...</p>
-    </section>
+    <!--==========================
+            QUICK INFO
+    ===========================-->
 
-    <!-- ================= PLACES ================= -->
-    <section class="section">
-        <h2>Top Attractions</h2>
-        <div id="placesContainer" class="card-container"></div>
-    </section>
+   
 
-    <!-- ================= FOODS ================= -->
-    <section class="section">
-        <h2>Popular Foods</h2>
-        <div id="foodContainer" class="card-container"></div>
-    </section>
+    <!--==========================
+            ABOUT
+    ===========================-->
 
-    <!-- ================= TRAVEL INFO ================= -->
-    <section class="section">
-        <h2>Travel Information</h2>
-        <div class="info-grid">
-            <div class="info-card">
-                <h3>🏨 Hotel Price</h3>
-                <p id="hotelPrice"></p>
-            </div>
-            <div class="info-card">
-                <h3>🏍 Bike Rent</h3>
-                <p id="bikeRent"></p>
-            </div>
-            <div class="info-card">
-                <h3>🛵 Scooter Rent</h3>
-                <p id="scooterRent"></p>
-            </div>
-            <div class="info-card">
-                <h3>🚗 Car Rent</h3>
-                <p id="carRent"></p>
-            </div>
+    <section class="about-city">
+
+        <div class="about-content">
+
+            <span class="section-eyebrow">Overview</span>
+
+            <h2>About <span class="gradient-text">{{ place.city }}</span></h2>
+
+            <p>{{ place.description }}</p>
+
         </div>
+        
+        <section class="quick-info">
+
+            <div class="quick-card">
+                
+                <h2>{{ place.places|length }}</h2>
+                <p>Attractions</p>
+            </div>
+    
+            <div class="quick-card">
+               
+                <h2>{{ place.popularFoods|length }}</h2>
+                <p>Popular Foods</p>
+            </div>
+    
+            <div class="quick-card">
+                
+                <h2>{{ place.averageHotelPrice }}</h2>
+                <p>Avg. Hotel Price</p>
+            </div>
+    
+            <div class="quick-card">
+                
+                <h2>{{ place.vehicleRent|length }}</h2>
+                <p>Vehicle Options</p>
+            </div>
+    
+        </section>
+
     </section>
 
-    <!-- ================= BACK BUTTON ================= -->
-    <section class="back-home">
-        <a href="/" class="home-btn">← Back to Home</a>
+    <!--==========================
+        BEST TIME TO VISIT
+    ===========================-->
+
+    <section class="section season-section">
+
+        <div class="section-title">
+            <span class="section-eyebrow">Plan Ahead</span>
+            <h2>Best Time to Visit</h2>
+            <p>A quick seasonal guide before you pack your bags</p>
+        </div>
+
+        <div class="season-grid">
+
+            <div class="season-card">
+                <span class="season-icon">❄️</span>
+                <h3>Winter</h3>
+                <p class="season-months">Oct – Feb</p>
+                <p>Cool, clear days and the most comfortable time for sightseeing and long walks outdoors.</p>
+            </div>
+
+            <div class="season-card">
+                <span class="season-icon">☀️</span>
+                <h3>Summer</h3>
+                <p class="season-months">Mar – Jun</p>
+                <p>Warmer afternoons — plan indoor visits and markets midday, and save outdoor spots for morning or evening.</p>
+            </div>
+
+            <div class="season-card">
+                <span class="season-icon">🌧</span>
+                <h3>Monsoon</h3>
+                <p class="season-months">Jul – Sep</p>
+                <p>Lush, green landscapes and fewer crowds, though a light raincoat and flexible plans help.</p>
+            </div>
+
+        </div>
+
+        <section class="section" id="attractions">
+
+            <div class="section-title">
+                <span class="section-eyebrow">See & Do</span>
+                <h2>Top Attractions</h2>
+                <p>Must-visit places in {{ place.city }}</p>
+            </div>
+    
+            <div class="cards-grid">
+    
+                {% for attraction in place.places %}
+    
+                <div class="place-card">
+    
+                    <span class="place-pin">📍</span>
+    
+                    <h3>{{ attraction }}</h3>
+    
+                    <span class="place-tag">Must Visit</span>
+    
+                </div>
+    
+                {% endfor %}
+    
+            </div>
+    
+        </section>
+
     </section>
 
-    <script src="{{ url_for('static', filename='city.js') }}"></script>
+    <!--==========================
+        TRAVEL INFORMATION
+    ===========================-->
+
+    <section class="travel-section" id="travel">
+
+        <div class="section-title">
+            <span class="section-eyebrow">Get Around</span>
+            <h2 class="light-heading">Travel Information</h2>
+            <p class="light-sub">Everything you need for local transport and stays</p>
+        </div>
+
+        <div class="travel-grid">
+
+            <div class="travel-card">
+                <span>🏨</span>
+                <h3>Average Hotel Price</h3>
+                <p>{{ place.averageHotelPrice }}</p>
+            </div>
+
+            <div class="travel-card">
+                <span>🏍</span>
+                <h3>Bike Rent</h3>
+                <p>{{ place.vehicleRent.Bike }}</p>
+            </div>
+
+            <div class="travel-card">
+                <span>🛵</span>
+                <h3>Scooter Rent</h3>
+                <p>{{ place.vehicleRent.Scooter }}</p>
+            </div>
+
+            <div class="travel-card">
+                <span>🚗</span>
+                <h3>Car Rent</h3>
+                <p>{{ place.vehicleRent.Car }}</p>
+            </div>
+
+        </div>
+
+        <div class="travel-tips">
+
+            <h3>Travel Tips</h3>
+
+            <ul>
+                <li>Book hotels and rentals a few days in advance during weekends and holiday seasons.</li>
+                <li>Carry a valid ID — most rental counters ask for one as a deposit or proof.</li>
+                <li>Confirm fuel policy and helmet availability before riding off with a bike or scooter.</li>
+                <li>Keep some cash handy; smaller vendors near attractions may not accept cards.</li>
+            </ul>
+
+        </div>
+
+        <section class="section essentials-section" id="essentials-section">
+
+            <div class="section-title">
+                <span class="section-eyebrow">Before You Go</span>
+                <h2>Travel Essentials</h2>
+                <p>A simple checklist to pack smart</p>
+            </div>
+    
+            <div class="checklist-grid">
+    
+                <div class="checklist-card">
+                    <span>🎒</span>
+                    <p>Comfortable walking shoes</p>
+                </div>
+    
+                <div class="checklist-card">
+                    <span>🧴</span>
+                    <p>Sunscreen &amp; a reusable water bottle</p>
+                </div>
+    
+                <div class="checklist-card">
+                    <span>🪪</span>
+                    <p>Government ID &amp; hotel confirmation</p>
+                </div>
+    
+                <div class="checklist-card">
+                    <span>🔌</span>
+                    <p>Power bank &amp; charging cables</p>
+                </div>
+    
+                <div class="checklist-card">
+                    <span>☂️</span>
+                    <p>Light raincoat or umbrella</p>
+                </div>
+    
+                <div class="checklist-card">
+                    <span>💊</span>
+                    <p>Basic first-aid &amp; personal medication</p>
+                </div>
+    
+            </div>
+    
+        </section>
+
+    </section>
+
+    <!--==========================
+        TRAVEL ESSENTIALS
+    ===========================-->
+
+
+
+    <!--==========================
+        TRAVELER REVIEWS
+    ===========================-->
+
+    <section class="section reviews-section">
+
+        <div class="section-title">
+            <span class="section-eyebrow">From Fellow Travelers</span>
+            <h2>What Visitors Say</h2>
+        </div>
+
+        <div class="reviews-grid">
+
+            <div class="review-card">
+                <p class="review-stars">★★★★★</p>
+                <p class="review-text">"Spent four days here and still felt like we'd only scratched the surface. The food alone is worth the trip."</p>
+                <p class="review-author">— Ananya R.</p>
+            </div>
+
+            <div class="review-card">
+                <p class="review-stars">★★★★★</p>
+                <p class="review-text">"Renting a scooter made all the difference — we reached spots the tour buses skip entirely."</p>
+                <p class="review-author">— Rohit K.</p>
+            </div>
+
+            <div class="review-card">
+                <p class="review-stars">★★★★☆</p>
+                <p class="review-text">"Loved the pace of the city. Would recommend visiting in winter for the most comfortable weather."</p>
+                <p class="review-author">— Meera S.</p>
+            </div>
+
+        </div>
+
+    </section>
+
+        <!--==========================
+            POPULAR FOODS
+    ===========================-->
+
+    <section class="section food">
+
+        <div class="section-title">
+            <span class="section-eyebrow">Taste The City</span>
+            <h2>Famous Foods</h2>
+            <p>Delicious dishes you must try</p>
+        </div>
+
+        <div class="cards-grid">
+
+            {% for food in place.popularFoods %}
+
+            <div class="food-card">
+
+                <span class="food-icon">🍽</span>
+
+                <h3>{{ food }}</h3>
+
+                <span class="place-tag food-tag">Local Favorite</span>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+<!--==========================
+            BACK SECTION
+===========================-->
+
+<section class="back-section">
+
+    <h2>Ready for Somewhere New?</h2>
+    <p class="back-sub">Discover hidden gems, taste local flavors, and make memories in the next city you explore.</p>
+
+    <div class="back-actions">
+        <a href="/" class="home-btn">← Explore Another City</a>
+
+    </div>
+
+</section>
+
+
+    <!--==========================
+            FOOTER
+    ===========================-->
+
+    <footer class="city-footer">
+
+        <p>OnMyWay — Discover The Beauty Beyond The Roads</p>
+
+    </footer>
+
+    <!--==========================
+            SCROLL REVEAL
+            Why here, as a script rather than editing every
+            section's class list: it selects elements that
+            already exist (section, .quick-card, .place-card,
+            .food-card, .season-card, .travel-card,
+            .checklist-card, .review-card) and fades each one
+            in as it enters the viewport, only once. No HTML
+            classes needed to change anywhere above.
+    ===========================-->
+    <script>
+        (function () {
+            var targets = document.querySelectorAll(
+                'section:not(.city-hero), .quick-card, .place-card, .food-card, .season-card, .travel-card, .checklist-card, .review-card'
+            );
+
+            if (!('IntersectionObserver' in window)) return;
+
+            targets.forEach(function (el) { el.classList.add('reveal-init'); });
+
+            var observer = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('reveal-in');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15 });
+
+            targets.forEach(function (el) { observer.observe(el); });
+        })();
+    </script>
+
 </body>
+
 </html>

@@ -1,117 +1,3 @@
-'''
-from flask import Flask, jsonify, request, render_template
-import json
-import random
-
-app = Flask(__name__)
-
-with open("tourism.json", "r", encoding="utf-8") as file:
-    tourism = json.load(file)["cities"]
-
-
-
-
-@app.route("/")
-def Home():
-    return render_template("home.html")
-
-
-@app.route("/city")
-def City():
-    return render_template("city.html")
-
-
-@app.route("/cities")
-def Cities():
-    return jsonify(tourism)
-
-@app.route("/random")
-def Random():
-    return jsonify(random.choice(tourism))
-
-@app.route("/<int:id>")
-def WithID(id):
-
-    for city in tourism:
-        if city["id"] == id:
-            return jsonify(city)
-
-    return jsonify({"Message": "City Not Found!"}),404
-
-
-@app.route("/search")
-def Search():
-
-    city_name = request.args.get("city")
-    state_name = request.args.get("state")
-
-    if city_name:
-        print(city_name)
-        print(tourism)
-        for city in tourism:
-            print("city")
-
-            if city["city"].lower() == city_name.lower():
-                print(city)
-                return render_template("city.html",a = city)
-                # return jsonify(city)
-            
-
-        return jsonify({
-            "message":"City Not Found"
-        }),404
-
-
-    if state_name:
-
-        data=[]
-
-        for city in tourism:
-
-            if city["state"].lower()==state_name.lower():
-                data.append(city)
-
-        return jsonify(data)
-
-    return jsonify({
-        "message":"No Search Parameter Provided"
-    }),400
-
-@app.route("/add", methods=["POST"])
-def Add():
-
-    d = request.get_json()
-
-    d["id"] = len(tourism) + 1
-
-    tourism.append(d)
-
-    return jsonify({
-        "Message": "New City Added",
-        "Data": d
-    })
-@app.route("/<int:id>", methods=["DELETE"])
-def Delete(id):
-
-    for city in tourism:
-
-        if city["id"] == id:
-
-            tourism.remove(city)
-
-            return jsonify({
-                "Message": "City Deleted",
-                "Data": city
-            })
-
-    return jsonify({"Message": "City Not Found"}),404
-
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
-'''
-
 from flask import Flask, jsonify, request, render_template
 import json
 import random
@@ -124,65 +10,141 @@ with open("tourism.json", "r", encoding="utf-8") as file:
 
 @app.route("/")
 def Home():
-    return render_template("home.html")
-
-
-@app.route("/city")
-def City():
-    return render_template("city.html")
-
-
-@app.route("/cities")
-def Cities():
-    return jsonify(tourism)
-
-
-@app.route("/random")
-def Random():
-    return jsonify(random.choice(tourism))
-
-
-@app.route("/<int:id>")
-def WithID(id):
-    for city in tourism:
-        if city["id"] == id:
-            return jsonify(city)
-    return jsonify({"message": "City Not Found!"}), 404
-
+    return render_template("home.html", msg = "Manage Tourist Places")
 
 @app.route("/search")
-def Search():
-    city_name = request.args.get("city")
-    state_name = request.args.get("state")
+def search():
 
-    if city_name:
-        for city in tourism:
-            if city["city"].lower() == city_name.lower():
-                return jsonify(city)
-        return jsonify({"message": "City Not Found"}), 404
+    city = request.args.get("city", "").strip()
 
-    if state_name:
-        data = [c for c in tourism if c["state"].lower() == state_name.lower()]
-        return jsonify(data)
+    if city == "":
+        return render_template(
+            "home.html",
+            msg="Please Enter a City"
+        )
 
-    return jsonify({"message": "No Search Parameter Provided"}), 400
+    for place in tourism:
+        if place["city"].lower() == city.lower():
+            return render_template("city.html",place=place)
 
+    return render_template("home.html", msg=f"{city.title()} Not Found")
 
 @app.route("/add", methods=["POST"])
-def Add():
-    d = request.get_json()
-    d["id"] = len(tourism) + 1
-    tourism.append(d)
-    return jsonify({"Message": "New City Added", "Data": d})
+def add():
+    with open("tourism.json", "r", encoding="utf-8") as file:
+        data = json.load(file)
+
+    tourism = data["cities"]
+    city = request.form["city"].strip()
+    state = request.form["state"].strip()
+    heroImage = request.form["heroImage"].strip()
+    description = request.form["description"].strip()
+
+    places = [place.strip() for place in request.form["places"].split(",") if place.strip()]
+
+    averageHotelPrice = request.form["averageHotelPrice"].strip()
+
+    popularFoods = [ food.strip() for food in request.form["popularFoods"].split(",") if food.strip() ]
+
+    bikeRent = request.form["bikeRent"].strip()
+    scooterRent = request.form["scooterRent"].strip()
+    carRent = request.form["carRent"].strip()
+
+    for place in tourism:
+
+        if place["city"].lower() == city.lower():
+
+            return render_template( "home.html", msg=f"{city} already exists.")
+
+    new_id = max(place["id"] for place in tourism) + 1 if tourism else 1
+
+    new_place = {
+        "id": new_id,
+        "city": city,
+        "state": state,
+        "heroImage": heroImage,
+        "description": description,
+        "places": places,
+        "averageHotelPrice": averageHotelPrice,
+        "popularFoods": popularFoods,
+        "vehicleRent": {
+            "Bike": bikeRent,
+            "Scooter": scooterRent,
+            "Car": carRent
+        }
+    }
+
+    tourism.append(new_place)
+
+    with open("tourism.json", "w", encoding="utf-8") as file:
+        json.dump(data,file,indent=4,ensure_ascii=False)
+
+    return render_template("city.html",place=new_place)
+
+@app.route("/update", methods=["POST"])
+def update():
+    with open("tourism.json", "r", encoding="utf-8") as file:
+        data = json.load(file)
+
+    tourism = data["cities"]
+    city = request.form["city"].strip()
+
+    for place in tourism:
+
+        if place["city"].lower() == city.lower():
+            if request.form["state"].strip():
+                place["state"] = request.form["state"].strip()
+
+            if request.form["heroImage"].strip():
+                place["heroImage"] = request.form["heroImage"].strip()
+
+            if request.form["description"].strip():
+                place["description"] = request.form["description"].strip()
+
+            if request.form["places"].strip():
+                place["places"] = [p.strip() for p in request.form["places"].split(",") if p.strip()]
+
+            if request.form["averageHotelPrice"].strip():
+                place["averageHotelPrice"] = request.form["averageHotelPrice"].strip()
+
+            if request.form["popularFoods"].strip():
+                place["popularFoods"] = [ food.strip() for food in request.form["popularFoods"].split(",") if food.strip() ]
+
+            if request.form["bikeRent"].strip():
+                place["vehicleRent"]["Bike"] = request.form["bikeRent"].strip()
+
+            if request.form["scooterRent"].strip():
+                place["vehicleRent"]["Scooter"] = request.form["scooterRent"].strip()
+
+            if request.form["carRent"].strip():
+                place["vehicleRent"]["Car"] = request.form["carRent"].strip()
+
+            with open("tourism.json", "w", encoding="utf-8") as file:
+                json.dump( data, file, indent=4, ensure_ascii=False )
+
+            return render_template( "city.html", place=place )
+
+    return render_template( "home.html", msg=f"{city} Not Found" )
 
 
-@app.route("/<int:id>", methods=["DELETE"])
-def Delete(id):
-    for city in tourism:
-        if city["id"] == id:
-            tourism.remove(city)
-            return jsonify({"Message": "City Deleted", "Data": city})
-    return jsonify({"Message": "City Not Found"}), 404
+@app.route("/delete", methods=["POST"])
+def delete():
+    with open("tourism.json", "r", encoding="utf-8") as file:
+        data = json.load(file)
+
+    tourism = data["cities"]
+    city = request.form["city"].strip()
+
+    for i, place in enumerate(tourism):
+
+        if place["city"].lower() == city.lower():
+            tourism.pop(i)
+            with open("tourism.json", "w", encoding="utf-8") as file:
+                json.dump( data, file, indent=4, ensure_ascii=False )
+
+            return render_template( "home.html", msg=f"{city} Deleted Successfully" )
+
+    return render_template( "home.html", msg=f"{city} Not Found" )
 
 
 if __name__ == "__main__":

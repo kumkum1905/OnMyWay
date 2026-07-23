@@ -1,0 +1,586 @@
+/*=========================================
+            PLACES SECTION
+=========================================*/
+
+#places{
+    position: relative;
+    min-height: 100vh;
+    overflow: hidden;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    padding:120px 8%;
+    background: url("./assets/formBG.png") no-repeat center;
+    background-size: cover;
+}
+
+/*=========================================
+            BACKGROUND VIDEO
+=========================================*/
+/* 
+.bg-video{
+
+    position:absolute;
+    inset:0;
+
+    width:100%;
+    height:100%;
+
+    object-fit:cover;
+
+    z-index:-3;
+} */
+
+/*=========================================
+            OVERLAY
+=========================================*/
+
+.place-overlay{
+
+    position:absolute;
+    inset:0;
+
+    background:
+    linear-gradient(
+        rgba(10,10,25,.75),
+        rgba(20,12,40,.78),
+        rgba(10,10,20,.88)
+    );
+
+    backdrop-filter:blur(2px);
+
+    z-index:-2;
+}
+
+/*=========================================
+            ADMIN CARD
+=========================================*/
+
+.admin-card{
+
+    width:min(950px,95%);
+
+    padding:45px;
+
+    border-radius:28px;
+
+    background:
+    rgba(157, 101, 101, 0.08);
+
+    border:1px solid rgba(255,255,255,.15);
+
+    backdrop-filter:blur(2px);
+
+    box-shadow:
+    0 20px 60px rgba(0,0,0,.45);
+
+    animation:cardAppear .8s ease;
+
+    z-index:5;
+}
+
+/*=========================================
+              HEADING
+=========================================*/
+
+.admin-card h1{
+
+    text-align:center;
+
+    font-size:2.8rem;
+
+    margin-bottom:35px;
+
+    color:white;
+
+    background:
+    linear-gradient(
+        90deg,
+        #ff4fa3,
+        #d946ef,
+        #8b5cf6
+    );
+
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+
+/*=========================================
+                TABS
+=========================================*/
+
+.tabs{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:18px;
+
+    flex-wrap:wrap;
+
+    margin-bottom:35px;
+}
+
+.tab-btn{
+
+    padding:14px 28px;
+
+    border:none;
+
+    border-radius:50px;
+
+    cursor:pointer;
+
+    font-size:1rem;
+
+    font-weight:600;
+
+    color:white;
+
+    background:
+    rgba(255,255,255,.08);
+
+    border:1px solid rgba(255,255,255,.12);
+
+    backdrop-filter:blur(12px);
+
+    transition:.35s;
+
+    position:relative;
+
+    overflow:hidden;
+}
+
+.tab-btn:hover{
+
+    transform:translateY(-5px);
+
+    background:
+    rgba(255,79,163,.18);
+}
+
+.tab-btn.active{
+
+    background:
+    linear-gradient(
+        135deg,
+        #ff4fa3,
+        #8b5cf6
+    );
+
+    box-shadow:
+    0 12px 30px rgba(255,79,163,.4);
+}
+
+/*=========================================
+        TAB CONTENT
+=========================================*/
+
+.tab-content{
+
+    display:none;
+
+    animation:fadeTab .45s ease;
+}
+
+.tab-content.active{
+
+    display:block;
+}
+
+/*=========================================
+            ANIMATION
+=========================================*/
+
+@keyframes fadeTab{
+
+    from{
+
+        opacity:0;
+
+        transform:
+        translateY(25px);
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+        translateY(0);
+    }
+
+}
+
+@keyframes cardAppear{
+
+    from{
+
+        opacity:0;
+
+        transform:
+        scale(.9);
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:
+        scale(1);
+    }
+
+}
+
+/*=========================================
+                FORM
+=========================================*/
+
+form{
+
+    display:grid;
+
+    gap:18px;
+}
+
+/*=========================================
+            INPUTS
+=========================================*/
+
+form input,
+form textarea{
+
+    width:100%;
+
+    padding:16px 20px;
+
+    border-radius:16px;
+
+    border:1px solid rgba(255,255,255,.12);
+
+    background:
+    rgba(255,255,255,.08);
+
+    color:white;
+
+    font-size:1rem;
+
+    outline:none;
+
+    transition:.35s;
+
+    resize:none;
+}
+
+/*=========================================
+            TEXTAREA
+=========================================*/
+
+textarea{
+
+    min-height:110px;
+}
+
+/*=========================================
+        PLACEHOLDER
+=========================================*/
+
+input::placeholder,
+textarea::placeholder{
+
+    color:#c7c7c7;
+}
+
+/*=========================================
+            FOCUS
+=========================================*/
+
+input:focus,
+textarea:focus{
+
+    border-color:#ff4fa3;
+
+    box-shadow:
+    0 0 18px rgba(255,79,163,.35);
+
+    background:
+    rgba(255,255,255,.12);
+}
+
+/*=========================================
+            BUTTON
+=========================================*/
+
+form button{
+
+    padding:16px;
+
+    border:none;
+
+    border-radius:50px;
+
+    cursor:pointer;
+
+    color:white;
+
+    font-size:1rem;
+
+    font-weight:600;
+
+    transition:.35s;
+
+    background:
+    linear-gradient(
+        135deg,
+        #ff4fa3,
+        #8b5cf6
+    );
+
+    box-shadow:
+    0 10px 25px rgba(255,79,163,.35);
+}
+
+form button:hover{
+
+    transform:
+    translateY(-5px);
+
+    box-shadow:
+    0 20px 35px rgba(255,79,163,.45);
+}
+
+/*=========================================
+        UPDATE & DELETE
+=========================================*/
+
+.action-btns{
+
+    display:flex;
+
+    gap:18px;
+
+    margin-top:8px;
+}
+
+.update-btn{
+
+    flex:1;
+}
+
+.delete-btn{
+
+    flex:1;
+
+    background:
+    linear-gradient(
+        135deg,
+        #ff3b5c,
+        #c81d4d
+    );
+}
+
+.delete-btn:hover{
+
+    box-shadow:
+    0 15px 35px rgba(255,59,92,.45);
+}
+
+/*=========================================
+            SEARCH FORM
+=========================================*/
+
+#search form{
+
+    display:flex;
+
+    gap:18px;
+}
+
+#search input{
+
+    flex:1;
+}
+
+#search button{
+
+    width:180px;
+}
+
+/*=========================================
+            GRID
+=========================================*/
+
+#add form,
+#update form{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:18px;
+}
+
+#add textarea,
+#update textarea{
+
+    grid-column:1/3;
+}
+
+#add button{
+
+    grid-column:1/3;
+}
+
+.action-btns{
+
+    grid-column:1/3;
+}
+
+/*=========================================
+        HOVER EFFECT
+=========================================*/
+
+input:hover,
+textarea:hover{
+
+    border-color:
+    rgba(255,79,163,.4);
+}
+
+/*=========================================
+            SCROLLBAR
+=========================================*/
+
+textarea::-webkit-scrollbar{
+
+    width:8px;
+}
+
+textarea::-webkit-scrollbar-thumb{
+
+    background:#ff4fa3;
+
+    border-radius:20px;
+}
+
+/*=========================================
+        RESPONSIVE
+=========================================*/
+
+@media(max-width:800px){
+
+#search form{
+
+    flex-direction:column;
+}
+
+#search button{
+
+    width:100%;
+}
+
+#add form,
+#update form{
+
+    grid-template-columns:1fr;
+}
+
+#add textarea,
+#update textarea,
+.action-btns,
+#add button{
+
+    grid-column:auto;
+}
+
+.action-btns{
+
+    flex-direction:column;
+}
+
+.admin-card{
+
+    padding:30px 20px;
+}
+
+.admin-card h1{
+
+    font-size:2rem;
+}
+
+}
+
+/*=========================================
+        ANIMATED BORDER
+=========================================*/
+
+.admin-card{
+    position: relative;
+    overflow: hidden;
+}
+
+.admin-card::before{
+
+    content:"";
+
+    position:absolute;
+
+    inset:-2px;
+
+    /* background:linear-gradient(
+        45deg,
+        #ff4fa3,
+        transparent,
+        #8b5cf6,
+        transparent,
+        #ff4fa3
+    ); */
+
+    background-size:400%;
+
+    animation:borderAnimation 8s linear infinite;
+
+    z-index:-2;
+}
+
+.admin-card::after{
+
+    content:"";
+
+    position:absolute;
+
+    inset:2px;
+
+    background:rgba(0, 0, 0, 0.516);
+
+    border-radius:26px;
+
+    z-index:-1;
+}
+
+@keyframes borderAnimation{
+
+    0%{
+
+        background-position:0%;
+    }
+
+    100%{
+
+        background-position:400%;
+    }
+
+}
+
+.tab-btn.active{
+
+    box-shadow:
+    
+    0 0 15px rgba(255,79,163,.4),
+    
+    0 0 35px rgba(139,92,246,.4);
+    
+    }
